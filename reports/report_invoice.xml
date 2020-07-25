@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="ml_cash_discount_report_invoice" inherit_id="account.report_invoice_document">
+            <xpath expr="//p[@name='payment_term']" position="after">
+                <p t-if="o.amount_cd" name="amount_cash_discount">
+                    Or an amount of <strong><span t-field="o.amount_cd"/></strong> to be deducted if paid before <strong><span t-field="o.date_cd"/></strong>
+                </p>
+            </xpath>
+        </template>
+    </data>
+</odoo>

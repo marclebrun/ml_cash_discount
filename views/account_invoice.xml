@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="invoice_form" model="ir.ui.view">
+        <field name="name">invoice.form.cd</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <field name="amount_total" position="after">
+                <field name="show_cd" invisible="1"/>
+                <field name="amount_cd" attrs="{'invisible': [('show_cd', '=', False)]}"/>
+                <field name="total_cd" class="oe_subtotal_footer_separator" attrs="{'invisible': [('show_cd', '=', False)]}"/>
+                <field name="date_cd" attrs="{'invisible': [('show_cd', '=', False)]}"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

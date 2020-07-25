@@ -1,0 +1,106 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* ml_cash_discount
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0-20200719\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-21 06:04+0000\n"
+"PO-Revision-Date: 2020-07-21 08:23+0200\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: \n"
+"Language: fr\n"
+"X-Generator: Poedit 2.2.4\n"
+
+#. module: ml_cash_discount
+#: model_terms:ir.ui.view,arch_db:ml_cash_discount.ml_cash_discount_report_invoice
+msgid "Or an amount of"
+msgstr "Soit un montant de"
+
+#. module: ml_cash_discount
+#: model:ir.model.fields,field_description:ml_cash_discount.field_account_invoice__amount_cd
+#: model:ir.model.fields,help:ml_cash_discount.field_account_invoice__amount_cd
+msgid "Amount of Cash Discount"
+msgstr "Montant de l'escompte"
+
+#. module: ml_cash_discount
+#: code:addons/ml_cash_discount/models/account_invoice.py:113
+#: model_terms:ir.ui.view,arch_db:ml_cash_discount.ml_account_payment_term_form
+#, python-format
+msgid "Cash Discount"
+msgstr "Escompte financier"
+
+#. module: ml_cash_discount
+#: model:ir.model.fields,field_description:ml_cash_discount.field_account_invoice__date_cd
+msgid "Cash Discount validity date"
+msgstr "Date de validité de l'escompte"
+
+#. module: ml_cash_discount
+#: model_terms:ir.ui.view,arch_db:ml_cash_discount.ml_account_payment_term_form
+msgid "Configure the Cash Discount parameters linked to this Payment Terms."
+msgstr "Configurez les paramètres de l'Escompte Financier liés à ces Conditions de Paiement."
+
+#. module: ml_cash_discount
+#: model:ir.model.fields,field_description:ml_cash_discount.field_account_payment_term__cd_percent
+msgid "Discount (%)"
+msgstr "Escompte (%)"
+
+#. module: ml_cash_discount
+#: model:ir.model.fields,field_description:ml_cash_discount.field_account_payment_term__cd_delay
+msgid "Discount delay (days)"
+msgstr "Validité de l'escompte (jours)"
+
+#. module: ml_cash_discount
+#: selection:account.payment.term,cd_include_tax:0
+#: code:addons/ml_cash_discount/models/account_payment_term.py:20
+#, python-format
+msgid "Excluding tax"
+msgstr "Montant hors taxe"
+
+#. module: ml_cash_discount
+#: model:ir.model.fields,field_description:ml_cash_discount.field_account_payment_term__cd_include_tax
+msgid "Include Taxes in calculation of Cash Discount amount ?"
+msgstr "Inclure les taxes lors du calcul du montant de l'escompte ?"
+
+#. module: ml_cash_discount
+#: selection:account.payment.term,cd_include_tax:0
+#: code:addons/ml_cash_discount/models/account_payment_term.py:21
+#, python-format
+msgid "Including all taxes"
+msgstr "Toutes taxes inclues"
+
+#. module: ml_cash_discount
+#: model_terms:ir.ui.view,arch_db:ml_cash_discount.ml_account_payment_term_form
+msgid "Invoices using this Payment Terms will automatically have a percentage of Cash Discount and a date of validity based on the specified delay."
+msgstr "Les factures utilisant ces Conditions de Paiement auront automatiquement un pourcentage d'Escompte et une date de validité basée sur le délai spécifié."
+
+#. module: ml_cash_discount
+#: code:addons/ml_cash_discount/models/account_invoice.py:108
+#, python-format
+msgid "No account defined for Cash Discount."
+msgstr "Aucun compte financier n'est défini pour l'escompte."
+
+#. module: ml_cash_discount
+#: model:ir.model.fields,field_description:ml_cash_discount.field_res_company__out_inv_cd_account_id
+msgid "Outgoing Invoice Cash Discount Account"
+msgstr "Compte financier pour l'escompte sur factures de vente"
+
+#. module: ml_cash_discount
+#: model:ir.model,name:ml_cash_discount.model_account_payment_term
+msgid "Payment Terms"
+msgstr "Conditions de Paiement"
+
+#. module: ml_cash_discount
+#: model:ir.model.fields,field_description:ml_cash_discount.field_account_invoice__total_cd
+msgid "Total including Cash Discount"
+msgstr "Total avec escompte"
+
+#. module: ml_cash_discount
+#: model_terms:ir.ui.view,arch_db:ml_cash_discount.ml_cash_discount_report_invoice
+msgid "to be deducted if paid before"
+msgstr "à déduire en cas de paiement avant le"
