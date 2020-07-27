@@ -43,7 +43,6 @@ class AccountInvoice(models.Model):
     @api.multi
     @api.depends('payment_term_id')
     def _compute_show_cd(self):
-        print("_compute_show_cd")
         for inv in self:
             # vrai si payment term est défini, et % d'escompte non null
             inv.show_cd = (inv.payment_term_id and inv.payment_term_id.cd_percent)
@@ -52,18 +51,12 @@ class AccountInvoice(models.Model):
     @api.multi
     @api.depends('payment_term_id', 'amount_total', 'amount_tax')
     def _compute_amount_cd(self):
-        print("_compute_amount_cd")
         for inv in self:
             inv.amount_cd = 0.0
             inv.total_cd  = 0.0
 
             # si payment term est défini, et % d'escompte non null
             if inv.payment_term_id and inv.payment_term_id.cd_percent:
-                print("%.2f%% %s" % (inv.payment_term_id.cd_percent, inv.payment_term_id.cd_include_tax))
-                print("amount_untaxed = %.2f €" % inv.amount_untaxed)
-                print("amount_tax     = %.2f €" % inv.amount_tax)
-                print("amount_total   = %.2f €" % inv.amount_total)
-
                 if inv.payment_term_id.cd_include_tax == "untaxed":
                     inv.amount_cd = inv.amount_untaxed * inv.payment_term_id.cd_percent / 100
                 if inv.payment_term_id.cd_include_tax == "total":
@@ -75,7 +68,6 @@ class AccountInvoice(models.Model):
     @api.multi
     @api.depends('payment_term_id', 'date_invoice')
     def _compute_date_cd(self):
-        print("_compute_date_cd")
         for inv in self:
             inv.date_cd = False
             # si facture de vente, et payment term est défini, et % d'escompte non nul
@@ -145,30 +137,3 @@ class AccountInvoice(models.Model):
                                 cd_vals['credit'] = -amount_cd
                             move_lines.append((0, 0, cd_vals))
         return move_lines
-
-    # @api.model
-    # def _prepare_refund(self, invoice, date_invoice=None,
-    #     date=None, description=None, journal_id=None):
-    #     res = super(AccountInvoice, self)._prepare_refund(
-    #         invoice, date_invoice=date_invoice, date=date,
-    #         description=description, journal_id=journal_id
-    #     )
-    #     res['percent_cd'] = self.percent_cd
-    #     return res
-
-    # @api.multi
-    # def get_taxes_values(self):
-    #     self.ensure_one()
-    #     tax_grouped = super(AccountInvoice, self).get_taxes_values()
-    #     if self.company_id.country_id.code == 'BE':
-    #         pct = self.percent_cd
-    #         if pct:
-    #             cc_round = self.company_id.currency_id.round
-    #             multiplier = 1 - pct / 100
-    #             for key in tax_grouped.keys():
-    #                 tax_grouped[key].update({
-    #                     'base': cc_round(
-    #                         multiplier * tax_grouped[key]['base']),
-    #                     'amount': multiplier * tax_grouped[key]['amount'],
-    #                     })
-    #     return tax_grouped
