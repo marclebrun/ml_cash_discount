@@ -1,5 +1,6 @@
 ML Cash Discount
 ----------------
 
-Odoo 12 module to add Cash Discount on Invoices according to Belgian Tax Rules
+Adds Cash Discount on Invoices according to Belgian Tax Rules.
 
+Tested on Odoo 12.
