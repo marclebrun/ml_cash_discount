@@ -8,10 +8,7 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet/group" position="before">
                 <group>
-                    <group>
-                        <h1>TEST3 :-)</h1>
-                        <field name="bigoudi" />
-                    </group>
+                    <field name="infos_cd" readonly="1" />
                 </group>
             </xpath>
         </field>
