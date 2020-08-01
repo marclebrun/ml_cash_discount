@@ -27,7 +27,8 @@ class AccountPayment(models.Model):
             discount_applied = False
             
             if inv.show_cd:
-                discount_applied = self.payment_date and (self.payment_date <= inv.date_cd)
+                if inv.date_cd:
+                    discount_applied = self.payment_date and (self.payment_date <= inv.date_cd)
 
                 # if discount_applied:
                 #     difference += (inv.residual_signed - inv.total_cd)
