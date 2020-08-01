@@ -2,6 +2,8 @@
 
 Adds Cash Discount on Invoices according to Belgian Tax Rules.
 
+This module has been developped and tested on __Odoo 12__.
+
 ## Configuration
 
 ### Account
