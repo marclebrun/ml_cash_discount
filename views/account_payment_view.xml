@@ -7,7 +7,11 @@
         <field name="inherit_id" ref="account.view_account_payment_invoice_form"/>
         <field name="arch" type="xml">
             <xpath expr="//sheet/group" position="before">
-                <group>
+                <group
+                    name="group_cash_discount"
+                    attrs="{'invisible': [('infos_cd', '=', '')]}"
+                    >
+
                     <field name="infos_cd" readonly="1" />
                 </group>
             </xpath>
