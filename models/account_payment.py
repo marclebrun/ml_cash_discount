@@ -14,24 +14,25 @@ class AccountPayment(models.Model):
         then the total amount of the payment is replaced with the discounted amount
         of the invoice.
         """
-        total = super(AccountPayment, self)._compute_payment_amount(invoices, currency)
-        # difference = 0.0
+        print("IN  _compute_payment_amount")
+
+        total = super()._compute_payment_amount(invoices, currency)
+        infos = ""
+
+        print("Montant initial : %.2f" % total)
 
         if not invoices:
             invoices = self.invoice_ids
 
-        infos = ""
-
         for inv in invoices:
+            print("Facture %s %s" % (inv.type, inv.number))
 
             discount_applied = False
             
             if inv.show_cd:
+                print("show_cd")
                 if inv.date_cd:
                     discount_applied = self.payment_date and (self.payment_date <= inv.date_cd)
-
-                # if discount_applied:
-                #     difference += (inv.residual_signed - inv.total_cd)
 
                 if inv.payment_term_id and inv.payment_term_id.cd_percent:
                     validity = "(%d %s)" % (inv.payment_term_id.cd_delay, _("days"))
@@ -51,15 +52,48 @@ class AccountPayment(models.Model):
                 if discount_applied:
                     total = inv.total_cd
 
-        for rec in self:
-            rec.infos_cd = infos
-            # rec.payment_difference = difference
-            # rec.payment_difference_handling = 'reconcile'
-            # rec.writeoff_account_id = inv.company_id.out_inv_cd_account_id
-            # rec.writeoff_label = 'Bigoudi'
+        for payment in self:
+            payment.infos_cd = infos
         
+        print("OUT _compute_payment_amount")
         return total
 
-    @api.onchange('payment_date')
-    def _onchange_payment_date(self):
-        self.amount = self._compute_payment_amount()
+    # @api.onchange('payment_date')
+    # def _onchange_payment_date(self):
+    #     print("IN  _onchange_payment_date")
+    #     self.amount = self._compute_payment_amount()
+    #     print("OUT _onchange_payment_date")
+
+    # def _compute_payment_difference(self):
+    #     print("IN  _compute_payment_difference")
+    #     super()._compute_payment_difference()
+    #     print("_compute_payment_difference() : amount = %.2f ; payment_difference = %.2f" % (self.amount, self.payment_difference))
+    #     print("OUT _compute_payment_difference")
+
+
+
+
+
+
+
+    #--------------------------------------------------------------------------------------------------
+
+    # @api.onchange('amount')
+    # def _onchange_amount(self):
+    #     print("MONTANT MODIFIÉ")
+    #     super()._onchange_amount()
+
+    # def action_validate_invoice_payment(self):
+    #     print("===============================")
+    #     print("action_validate_invoice_payment")
+    #     print("===============================")
+
+    #     for payment in self:
+    #         for invoice in payment.invoice_ids:
+    #             print("Invoice %s - State %s" % (invoice.number, invoice.state))
+    #             invoice.state = 'paid'
+    #             # invoice.write({'state': 'paid'})
+    #             print("    => %s" % invoice.state)
+        
+    #     return super().action_validate_invoice_payment()
+

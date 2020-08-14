@@ -47,7 +47,7 @@ class AccountInvoice(models.Model):
             # vrai si payment term est défini, et % d'escompte non null
             inv.show_cd = (inv.payment_term_id and inv.payment_term_id.cd_percent)
 
-    # calcule le montant d'escompte à chaque modification du total de la facture
+    # calcule le montant de l'escompte à chaque modification du total de la facture
     @api.multi
     @api.depends('payment_term_id', 'amount_total', 'amount_tax')
     def _compute_amount_cd(self):
@@ -137,3 +137,23 @@ class AccountInvoice(models.Model):
                                 cd_vals['credit'] = -amount_cd
                             move_lines.append((0, 0, cd_vals))
         return move_lines
+
+    # def _compute_residual(self):
+    #     print("==========================")
+    #     print("Calcul du montant résiduel")
+    #     print("==========================")
+        
+    #     super()._compute_residual()
+
+    #     print("État de la facture       = %s  " % self.state)
+    #     print("Montant résiduel calculé = %.2f" % self.residual)
+    #     print("Montant du CD            = %.2f" % self.amount_cd)
+
+    #     if self.amount_cd:
+    #         cd_valid = self.date_cd.today() <= self.date_cd
+    #         print("Date de validité CD      = %s  " % self.date_cd)
+    #         print("Cash Discount valide?    = %s  " % ("OUI" if cd_valid else "non"))
+
+    #         if cd_valid:
+    #             self.residual -= self.amount_cd
+    #             print("Nouveau montant résiduel = %.2f" % self.residual)

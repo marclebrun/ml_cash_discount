@@ -20,4 +20,5 @@
         'reports/report_invoice.xml',
     ],
     'installable': True,
+    'application': False,
 }
