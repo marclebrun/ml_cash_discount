@@ -35,22 +35,22 @@ class AccountPayment(models.Model):
                     discount_applied = self.payment_date and (self.payment_date <= inv.date_cd)
 
                 if inv.payment_term_id and inv.payment_term_id.cd_percent:
-                    validity = "(%d %s)" % (inv.payment_term_id.cd_delay, _("days"))
+                    delay = "%d %s" % (inv.payment_term_id.cd_delay, _("days"))   
                 else:
-                    validity = ""
+                    delay = ""
+
+                strValidity       = _("Discount validity :")
+                strValidityValue  = "<strong>%s</strong>" % delay
+                strDiscount       = _("Amount to be paid by <strong>%s</strong> at the latest :") % inv.date_cd
+                strDiscountValue  = "<strong>%.2f</strong>" % inv.total_cd
+                strNormal         = _("Amount to be paid after that date :")
+                strNormalValue    = "<strong>%.2f</strong>" % inv.residual_signed
 
                 infos += "<table>"
-                infos += "<tr><td>" + _("Invoice number")      + "</td><td><strong>%s  </strong></td></tr>" % inv.number
-                infos += "<tr><td>" + _("Date of invoice")     + "</td><td><strong>%s  </strong></td></tr>" % inv.date_invoice
-                infos += "<tr><td>" + _("Discount validity")   + "</td><td><strong>%s %s</strong></td></tr>" % (inv.date_cd, validity)
-                infos += "<tr><td>" + _("Payment date")        + "</td><td><strong>%s  </strong></td></tr>" % self.payment_date
-                infos += "<tr><td>" + _("Total to pay")        + "</td><td><strong>%.2f</strong></td></tr>" % inv.residual_signed
-                infos += "<tr><td>" + _("Total with discount") + "</td><td><strong>%.2f</strong></td></tr>" % inv.total_cd
-                infos += "<tr><td>" + _("Discount is applied") + "</td><td><strong>%s  </strong></td></tr>" % (_("Yes") if discount_applied else _("No"))
+                infos += "<tr><td>" + strValidity  + "</td><td>" + strValidityValue + "</td></tr>"
+                infos += "<tr><td>" + strDiscount  + "</td><td>" + strDiscountValue + "</td></tr>"
+                infos += "<tr><td>" + strNormal    + "</td><td>" + strNormalValue   + "</td></tr>"
                 infos += "</table>"
-
-                if discount_applied:
-                    total = inv.total_cd
 
         for payment in self:
             payment.infos_cd = infos
