@@ -39,9 +39,11 @@ class AccountPayment(models.Model):
                 else:
                     delay = ""
 
+                user_date_format   = self.env['res.lang']._lang_get(self.env.user.lang).date_format
+
                 strValidity       = _("Discount validity :")
                 strValidityValue  = "<strong>%s</strong>" % delay
-                strDiscount       = _("Amount to be paid by <strong>%s</strong> at the latest :") % inv.date_cd
+                strDiscount       = _("Amount to be paid by <strong>%s</strong> at the latest :") % inv.date_cd.strftime(user_date_format)
                 strDiscountValue  = "<strong>%.2f</strong>" % inv.total_cd
                 strNormal         = _("Amount to be paid after that date :")
                 strNormalValue    = "<strong>%.2f</strong>" % inv.residual_signed
