@@ -10,4 +10,3 @@ class res_company(models.Model):
         comodel_name='account.account',
         domain=[('deprecated', '=', False)],
     )
-    
