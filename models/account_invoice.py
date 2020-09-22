@@ -93,7 +93,16 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def finalize_invoice_move_lines(self, move_lines):
+        """
+        :param move_lines: a list of lines prepared from
+                           method 'action_move_create' in model 'account.invoice'
+        :return: the updated list of lines
+        """
+        print("FINALIZE_INVOICE_MOVE_LINES")
+
         for invoice in self:
+            print("BEFORE:")
+            self.print_move_lines(move_lines)
 
             # si facture de vente ou note de crédit de vente
             if invoice.type in ['out_invoice', 'out_refund']:
@@ -136,4 +145,36 @@ class AccountInvoice(models.Model):
                             else:
                                 cd_vals['credit'] = -amount_cd
                             move_lines.append((0, 0, cd_vals))
+            print("AFTER:")
+            self.print_move_lines(move_lines)
+        raise UserError("\"finalize_invoice_move_lines\" finished")
         return move_lines
+
+    def print_move_lines(self, lines):
+        print("  | %-40s | %10s | %10s | %10s | %s " % ('NAME', 'ACCOUNT', 'DEBIT', 'CREDIT', 'TAX_IDS'))
+        for line in lines:
+            values = line[2]
+
+            account = self.env['account.account'].search([('id', '=', values['account_id'])])[0]
+
+            # The 'tax_ids' element is either a boolean False, or a list of tuples
+            # Each tuple has the form (4, tax_id, None) => the 2dn element is the tax id.
+            # s_taxes = ""
+            # tax_ids = values['tax_ids']
+            # print("TAX IDS = ", tax_ids)
+            # if tax_ids:
+            #     for tax_id_tuple in tax_ids:
+            #         tax_id = tax_id_tuple[1]
+            #         print("  => tax_id = ", tax_id)
+            #         tax = self.env['account.tax'].search([ ('id', '=', tax_id)])[0]
+            #         s_taxes += "(%d) %s " % (tax.id, tax.name)
+
+            print("  | %-40s | %10s | %10.2f | %10.2f | %s" % (
+                values['name'][:39],
+                account.code,
+                values['debit']   if 'debit'   in values else 0.0,
+                values['credit']  if 'credit'  in values else 0.0,
+                values['tax_ids'] if 'tax_ids' in values else "",
+            ))
+
+        print("-" * 120)
