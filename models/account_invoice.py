@@ -6,6 +6,8 @@ from datetime import datetime, timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
+DEBUG = True
+
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
 
@@ -147,7 +149,8 @@ class AccountInvoice(models.Model):
                             move_lines.append((0, 0, cd_vals))
             print("AFTER:")
             self.print_move_lines(move_lines)
-        raise UserError("\"finalize_invoice_move_lines\" finished")
+        if DEBUG:
+            raise UserError("DEBUG MODE ENABLED\n\"finalize_invoice_move_lines\" finished")
         return move_lines
 
     def print_move_lines(self, lines):
