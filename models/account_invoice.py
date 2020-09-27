@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
-DEBUG = True
+DEBUG = False
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
