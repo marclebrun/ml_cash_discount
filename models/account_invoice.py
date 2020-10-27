@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
-DEBUG = False
+DEBUG = True
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
@@ -100,11 +100,12 @@ class AccountInvoice(models.Model):
                            method 'action_move_create' in model 'account.invoice'
         :return: the updated list of lines
         """
-        print("FINALIZE_INVOICE_MOVE_LINES")
+        if DEBUG:
+            print("FINALIZE_INVOICE_MOVE_LINES")
 
         for invoice in self:
-            print("BEFORE:")
-            self.print_move_lines(move_lines)
+            if DEBUG:
+                self.print_move_lines("BEFORE:", move_lines)
 
             # si facture de vente ou note de crédit de vente
             if invoice.type in ['out_invoice', 'out_refund']:
@@ -131,30 +132,42 @@ class AccountInvoice(models.Model):
                         amount_cd = 0.0
                         for line in move_lines:
                             vals = line[2]
+                            # s'il y a au moins une taxe appliquée à cette ligne
+                            # (donc vals.get('tax_ids') est une liste contenant au moins un élément)
+                            # il faut en soustraire le montant de l'escompte.
                             if vals.get('tax_ids'):
-                                cd_line = True
-                                if vals.get('debit'):
-                                    debit = cc_round(vals['debit'])
-                                    vals['debit'] = cc_round(debit * multiplier)
-                                    amount_cd += debit - vals['debit']
-                                if vals.get('credit'):
-                                    credit = cc_round(vals['credit'])
-                                    vals['credit'] = cc_round(credit * multiplier)
-                                    amount_cd -= credit - vals['credit']
+                                # si le contenu de tax_ids est un tuple dont le premier élément
+                                # vaut 6 alors il ne faut pas lui soustraire l'escompte car c'est une
+                                # ligne de taxe (taxe led, taxe éclairage, etc.)
+                                if vals.get('tax_ids')[0][0] != 6:
+                                    cd_line = True
+                                    if vals.get('debit'):
+                                        debit = cc_round(vals['debit'])
+                                        vals['debit'] = cc_round(debit * multiplier)
+                                        amount_cd += debit - vals['debit']
+                                    if vals.get('credit'):
+                                        credit = cc_round(vals['credit'])
+                                        vals['credit'] = cc_round(credit * multiplier)
+                                        amount_cd -= credit - vals['credit']
                         if cd_line:
                             if amount_cd > 0:
                                 cd_vals['debit'] = amount_cd
                             else:
                                 cd_vals['credit'] = -amount_cd
                             move_lines.append((0, 0, cd_vals))
-            print("AFTER:")
-            self.print_move_lines(move_lines)
+            if DEBUG:
+                self.print_move_lines("AFTER:", move_lines)
         if DEBUG:
             raise UserError("DEBUG MODE ENABLED\n\"finalize_invoice_move_lines\" finished")
         return move_lines
 
-    def print_move_lines(self, lines):
+    def print_move_lines(self, title, lines):
+        print(title)
         print("  | %-40s | %10s | %10s | %10s | %s " % ('NAME', 'ACCOUNT', 'DEBIT', 'CREDIT', 'TAX_IDS'))
+
+        total_debit  = 0.0
+        total_credit = 0.0
+
         for line in lines:
             values = line[2]
 
@@ -172,7 +185,7 @@ class AccountInvoice(models.Model):
             #         tax = self.env['account.tax'].search([ ('id', '=', tax_id)])[0]
             #         s_taxes += "(%d) %s " % (tax.id, tax.name)
 
-            print("  | %-40s | %10s | %10.2f | %10.2f | %s" % (
+            print("  | %-40s | %10s | %10.4f | %10.4f | %s" % (
                 values['name'][:39],
                 account.code,
                 values['debit']   if 'debit'   in values else 0.0,
@@ -180,4 +193,14 @@ class AccountInvoice(models.Model):
                 values['tax_ids'] if 'tax_ids' in values else "",
             ))
 
+            total_debit  += (values['debit' ] if 'debit'  in values else 0.0)
+            total_credit += (values['credit'] if 'credit' in values else 0.0)
+
+        print("  | %-40s | %10s | %10.4f | %10.4f | %s" % (
+            'TOTAUX',
+            '',
+            total_debit,
+            total_credit,
+            '',
+        ))
         print("-" * 120)
