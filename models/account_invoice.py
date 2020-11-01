@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
-DEBUG = True
+DEBUG = False
 
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
@@ -134,7 +134,8 @@ class AccountInvoice(models.Model):
                             vals = line[2]
                             # s'il y a au moins une taxe appliquée à cette ligne
                             # (donc vals.get('tax_ids') est une liste contenant au moins un élément)
-                            # il faut en soustraire le montant de l'escompte.
+                            # il faut en soustraire le montant de l'escompte qu'on ajoute au
+                            # montant total d'escompte dans la variable amount_cd.
                             if vals.get('tax_ids'):
                                 # si le contenu de tax_ids est un tuple dont le premier élément
                                 # vaut 6 alors il ne faut pas lui soustraire l'escompte car c'est une
