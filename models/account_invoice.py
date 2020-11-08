@@ -46,8 +46,8 @@ class AccountInvoice(models.Model):
     @api.depends('payment_term_id')
     def _compute_show_cd(self):
         for inv in self:
-            # vrai si payment term est défini, et % d'escompte non null
-            inv.show_cd = (inv.payment_term_id and inv.payment_term_id.cd_percent)
+            # vrai si payment term est défini, et % d'escompte non null, et date non nulle
+            inv.show_cd = (inv.payment_term_id and inv.payment_term_id.cd_percent and inv.date_cd)
 
     # calcule le montant de l'escompte à chaque modification du total de la facture
     @api.multi
